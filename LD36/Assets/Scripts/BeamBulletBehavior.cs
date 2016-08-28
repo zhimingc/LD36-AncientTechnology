@@ -15,6 +15,11 @@ public class BeamBulletBehavior : MonoBehaviour {
     transform.Translate(-Vector3.up * bulletSpeed * Time.deltaTime);
 	}
 
+  void BeamStreamBehaviour()
+  {
+
+  }
+
   void OnTriggerEnter2D(Collider2D col)
   {
     if (col.gameObject.tag == "Pickable" || col.gameObject.tag == "Floor")
