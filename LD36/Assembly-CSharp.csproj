@@ -45,7 +45,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\BeamBulletBehavior.cs" />
      <Compile Include="Assets\Scripts\BeamController.cs" />
+     <Compile Include="Assets\Scripts\BlockBehavior.cs" />
      <Compile Include="Assets\Scripts\ShipController.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>D:/Program Files (x86)/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>

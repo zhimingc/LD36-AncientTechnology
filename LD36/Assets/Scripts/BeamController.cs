@@ -3,7 +3,8 @@ using System.Collections;
 
 public class BeamController : MonoBehaviour {
 
-  public float speedOfPicked, rotateSpeed, offsetSpeed;
+  public GameObject beamBullet;
+  public float speedOfPicked, rotateSpeed, offsetSpeed, upwardSpeed;
   public bool isFloating;
   private GameObject picked;
   private Vector3 pointPicked;
@@ -39,6 +40,8 @@ public class BeamController : MonoBehaviour {
   {
     if (Input.GetKeyDown(KeyCode.Space))
     {
+      Instantiate(beamBullet, transform.position + Vector3.up * 2, Quaternion.identity);
+
       if (picked == null)
       {
         RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up); // Get it to ignore certain things
@@ -46,12 +49,14 @@ public class BeamController : MonoBehaviour {
         {
           if (hit.collider.tag == "Pickable") // Change to tag later?
           {
-            print("Picked: " + hit.collider.name);
+            //print("Picked: " + hit.collider.name);
             picked = GameObject.Find(hit.collider.name);
             picked.GetComponent<Rigidbody2D>().gravityScale = 0;
             oldShipPos = transform.position;
+            //picked.GetComponent<BlockBehavior>().ToggleStatic();
 
-            pointPicked = hit.point;
+            // Different beam mode to test
+            //pointPicked = hit.point;
           }
         }
       }
@@ -65,7 +70,8 @@ public class BeamController : MonoBehaviour {
     // Update the picked object
     if (isFloating && picked != null)
     {
-      float offsetFromShip = 7;
+      GameObject floor = GameObject.FindGameObjectWithTag("Floor");
+      float offsetFromShip = floor.transform.position.z + 1.5f;
       Vector3 v;
       Vector3 targetPosition = transform.position + (offsetFromShip * (-Vector3.up));
       v = targetPosition - picked.transform.position;
@@ -74,7 +80,12 @@ public class BeamController : MonoBehaviour {
     }
     else if (!isFloating && picked)
     {
-      Vector3 offsetDir = picked.transform.InverseTransformDirection(Vector3.left);
+      // Constant upwards movement to the object
+      Vector3 offsetDir = picked.transform.InverseTransformDirection(Vector3.up);
+      picked.transform.Translate(offsetDir * upwardSpeed * Time.deltaTime);
+
+      // Translation of the object to follow the ship
+      offsetDir = picked.transform.InverseTransformDirection(Vector3.left);
       picked.transform.Translate(offsetDir * (oldShipPos.x - transform.position.x));
       oldShipPos = transform.position;
     }
