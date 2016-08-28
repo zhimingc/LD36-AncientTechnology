@@ -1,0 +1,9 @@
+diff a/LD36/Assets/Scripts/BlockBehavior.cs b/LD36/Assets/Scripts/BlockBehavior.cs	(rejected hunks)
+@@ -8,6 +8,7 @@
+   private Vector3 curPos;
+   public GameObject templateObject;
+   public float inPlaceBuffer;
++  public bool isObjectInPlace;
+ 
+ 	// Use this for initialization
+ 	void Start () {

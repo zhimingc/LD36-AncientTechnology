@@ -5,6 +5,7 @@ public class BeamController : MonoBehaviour {
 
   public GameObject beamBullet;
   public float speedOfPicked, rotateSpeed, offsetSpeed, upwardSpeed;
+  public float speedCap;
   public bool isFloating;
   private GameObject picked;
   private Vector3 pointPicked;
@@ -36,6 +37,12 @@ public class BeamController : MonoBehaviour {
 
   }
 
+  public void UndoPicked()
+  {
+    if (picked) picked.GetComponent<Rigidbody2D>().gravityScale = 1;
+    picked = null;
+  }
+
   void UpdatePickup()
   {
     if (Input.GetKeyDown(KeyCode.Space))
@@ -62,8 +69,7 @@ public class BeamController : MonoBehaviour {
       }
       else
       {
-        picked.GetComponent<Rigidbody2D>().gravityScale = 1;
-        picked = null;
+        //UndoPicked();
       }
     }
 
@@ -80,14 +86,27 @@ public class BeamController : MonoBehaviour {
     }
     else if (!isFloating && picked)
     {
-      // Constant upwards movement to the object
-      Vector3 offsetDir = picked.transform.InverseTransformDirection(Vector3.up);
-      picked.transform.Translate(offsetDir * upwardSpeed * Time.deltaTime);
-
       // Translation of the object to follow the ship
-      offsetDir = picked.transform.InverseTransformDirection(Vector3.left);
+      Vector3 offsetDir = picked.transform.InverseTransformDirection(Vector3.left);
       picked.transform.Translate(offsetDir * (oldShipPos.x - transform.position.x));
-      oldShipPos = transform.position;
+      oldShipPos = transform.position;      
+
+      if (Input.GetKey(KeyCode.Space))
+      {
+        // Constant upward movement to the object
+        offsetDir = picked.transform.InverseTransformDirection(Vector3.up);
+        picked.GetComponent<Rigidbody2D>().AddForce(offsetDir * upwardSpeed);
+      }
+      else
+      {
+        // Constant downward movement to the object
+        offsetDir = picked.transform.InverseTransformDirection(-Vector3.up);
+        picked.GetComponent<Rigidbody2D>().AddForce(offsetDir * upwardSpeed);
+      }
+
+      // Clamp block's velocity
+      Rigidbody2D rbody2d = picked.GetComponent<Rigidbody2D>();
+      rbody2d.velocity = new Vector2(0.0f, Mathf.Clamp(rbody2d.velocity.y, -speedCap, speedCap));
     }
   }
 }

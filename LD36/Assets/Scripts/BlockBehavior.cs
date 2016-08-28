@@ -6,9 +6,11 @@ public class BlockBehavior : MonoBehaviour
   public bool isHortizontal, isStatic;
   private Quaternion initRot;
   private Vector3 curPos;
+
   public GameObject templateObject;
   public float inPlaceBuffer;
   public bool isObjectInPlace;
+  private GameObject player;
 
 	// Use this for initialization
 	void Start () {
@@ -21,6 +23,7 @@ public class BlockBehavior : MonoBehaviour
     templateObject.transform.localRotation = transform.localRotation;
     inPlaceBuffer = 0.4f;
     isObjectInPlace = false;
+    player = GameObject.FindGameObjectWithTag("Player");
   }
 
 	// Update is called once per frame
@@ -31,7 +34,6 @@ public class BlockBehavior : MonoBehaviour
   void LateUpdate()
   {
     transform.rotation = initRot;
-    //if (isStatic) transform.position = curPos;
   }
 
   void ObjectInPlaceCheck()
@@ -53,26 +55,33 @@ public class BlockBehavior : MonoBehaviour
   //  isStatic = !isStatic;
   //}
 
-  //void OnCollisionEnter2D(Collision2D col)
-  //{
-  //  print("saving curPos " + col.gameObject.tag);
-  //  if (col.gameObject.tag == "Pickable")
-  //  {
-  //    BlockBehavior blockScript = col.gameObject.GetComponent<BlockBehavior>();
-  //    if (!isStatic && blockScript.isStatic)
-  //    {
-  //      curPos = transform.position;
-  //      isStatic = true;
-  //    }
-  //  }
-  //  else if (col.gameObject.tag == "Floor")
-  //  {
-  //    if (!isStatic) 
-  //    {
-  //      curPos = transform.position;
-  //      isStatic = true;
-  //    }
-  //  }
-  //}
+  void OnCollisionEnter2D(Collision2D collision)
+  {
+    Collider2D col = collision.collider;
+    Vector3 contactPoint = collision.contacts[0].point;
+    Vector3 center = GetComponent<Collider2D>().bounds.center;
+    bool top = contactPoint.y > center.y;
+
+    if (!top) player.GetComponent<BeamController>().UndoPicked();
+
+    //print("saving curPos " + col.gameObject.tag);
+    //if (col.gameObject.tag == "Pickable")
+    //{
+    //  BlockBehavior blockScript = col.gameObject.GetComponent<BlockBehavior>();
+    //  if (!isStatic && blockScript.isStatic)
+    //  {
+    //    curPos = transform.position;
+    //    isStatic = true;
+    //  }
+    //}
+    //else if (col.gameObject.tag == "Floor")
+    //{
+    //  if (!isStatic)
+    //  {
+    //    curPos = transform.position;
+    //    isStatic = true;
+    //  }
+    //}
+  }
 
 }
