@@ -6,6 +6,9 @@ public class BlockBehavior : MonoBehaviour
   public bool isHortizontal, isStatic;
   private Quaternion initRot;
   private Vector3 curPos;
+  public GameObject templateObject;
+  public float inPlaceBuffer;
+  public bool isObjectInPlace;
 
 	// Use this for initialization
 	void Start () {
@@ -13,17 +16,36 @@ public class BlockBehavior : MonoBehaviour
     else transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
 
     initRot = transform.rotation;
-	}
+    templateObject.GetComponent<SpriteRenderer>().sprite = GetComponent<SpriteRenderer>().sprite;
+    templateObject.transform.localScale = transform.localScale;
+    templateObject.transform.localRotation = transform.localRotation;
+    inPlaceBuffer = 0.4f;
+    isObjectInPlace = false;
+  }
 
 	// Update is called once per frame
 	void Update () {
-	
+    ObjectInPlaceCheck();
 	}
 
   void LateUpdate()
   {
     transform.rotation = initRot;
     //if (isStatic) transform.position = curPos;
+  }
+
+  void ObjectInPlaceCheck()
+  {
+    if((transform.position - templateObject.transform.position).magnitude < inPlaceBuffer)
+    {
+      isObjectInPlace = true;
+      templateObject.GetComponent<SpriteRenderer>().enabled = false;
+    }
+    else
+    {
+      isObjectInPlace = false;
+      templateObject.GetComponent<SpriteRenderer>().enabled = true;
+    }
   }
 
   //public void ToggleStatic()
