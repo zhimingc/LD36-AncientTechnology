@@ -4,11 +4,11 @@ using System.Collections;
 public class ShipController : MonoBehaviour {
 
   public float moveSpeed, moveCap;
-  private Rigidbody2D rigidbody;
+  private Rigidbody2D rbody;
 
   // Use this for initialization
   void Start () {
-    rigidbody = GetComponent<Rigidbody2D>();
+    rbody = GetComponent<Rigidbody2D>();
 	}
 	
 	// Update is called once per frame
@@ -16,9 +16,13 @@ public class ShipController : MonoBehaviour {
     float moveDir = Input.GetAxis("Horizontal");
 
     // Feedback for acceleration direction
-    if (moveDir == 0.0f)
+    if (moveDir == 0.0f && transform.eulerAngles.z != 0.0f)
     {
       transform.Rotate(new Vector3(0.0f, 0.0f, -HeavySide(180.0f - transform.eulerAngles.z) * 2.0f));
+      if (transform.eulerAngles.z < 2.0f || transform.eulerAngles.z > 358.0f)
+      {
+        transform.eulerAngles = Vector3.zero;
+      }
     }
     else if (AngleClamp(30.0f) == 1)
     {
@@ -26,9 +30,9 @@ public class ShipController : MonoBehaviour {
     }
 
     // Move ship
-    rigidbody.AddForce(new Vector3(moveDir * moveSpeed * Time.deltaTime, 0.0f, 0.0f));
+    rbody.AddForce(new Vector3(moveDir * moveSpeed * Time.deltaTime, 0.0f, 0.0f));
     // Clamp ship's movement
-    rigidbody.velocity = new Vector2(Mathf.Clamp(rigidbody.velocity.x, -moveCap, moveCap), 0.0f);
+    rbody.velocity = new Vector2(Mathf.Clamp(rbody.velocity.x, -moveCap, moveCap), 0.0f);
 	}
 
   int AngleClamp(float clampAmt)
