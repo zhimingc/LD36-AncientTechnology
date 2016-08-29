@@ -22,7 +22,14 @@ public class CometManager : MonoBehaviour {
 
     if(timer <= 0)
     {
-      Instantiate(comet, new Vector3(Random.Range(-7, 7), 15, 0), new Quaternion());
+      Vector2 startPos = new Vector2(Random.Range(-7, 7), 15);
+      Vector2 endPos = new Vector2(Random.Range(-7, 7), -6);
+      Vector2 dir = endPos - startPos;
+      GameObject GO = (GameObject) Instantiate(comet, startPos, new Quaternion());
+      
+      GO.GetComponent<CometBehavior>().v = dir.normalized;
+      GO.GetComponent<CometBehavior>().forceMultiplier = 10.0f;
+      GO.GetComponent<ParticleSystem>().simulationSpace = ParticleSystemSimulationSpace.World;
       timer = timePerSpawn;
     }
   }

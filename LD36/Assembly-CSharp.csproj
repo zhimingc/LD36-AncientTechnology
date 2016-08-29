@@ -52,6 +52,7 @@
      <Compile Include="Assets\Scripts\BlockBehavior.cs" />
      <Compile Include="Assets\Scripts\BuilderManager.cs" />
      <Compile Include="Assets\Scripts\BuilderUI.cs" />
+     <Compile Include="Assets\Scripts\CometBehavior.cs" />
      <Compile Include="Assets\Scripts\CometManager.cs" />
      <Compile Include="Assets\Scripts\DayNightController.cs" />
      <Compile Include="Assets\Scripts\ShipController.cs" />
