@@ -3,10 +3,12 @@ using System.Collections;
 
 public class BeamController : MonoBehaviour {
 
-  public GameObject beamBullet;
+  public GameObject beamBullet, beamStream;
   public float speedOfPicked, rotateSpeed, offsetSpeed, upwardSpeed;
   public float speedCap;
   public bool isFloating;
+  public float beamFreq;
+  private float beamTimer;
   private GameObject picked;
   private Vector3 pointPicked;
   private Vector3 oldShipPos;
@@ -19,6 +21,7 @@ public class BeamController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
     UpdatePickup();
+    PickedFeedback();
     PickupControls();
 	}
 
@@ -43,6 +46,18 @@ public class BeamController : MonoBehaviour {
     picked = null;
   }
 
+  void PickedFeedback()
+  {
+    if (picked)
+    {
+      beamTimer -= Time.deltaTime;
+      if (beamTimer < 0.0f)
+      {
+        Instantiate(beamStream, transform.position + Vector3.up, Quaternion.identity);
+      }
+    }
+  }
+
   void UpdatePickup()
   {
     if (Input.GetKeyDown(KeyCode.Space))
@@ -60,10 +75,6 @@ public class BeamController : MonoBehaviour {
             picked = GameObject.Find(hit.collider.name);
             picked.GetComponent<Rigidbody2D>().gravityScale = 0;
             oldShipPos = transform.position;
-            //picked.GetComponent<BlockBehavior>().ToggleStatic();
-
-            // Different beam mode to test
-            //pointPicked = hit.point;
           }
         }
       }
