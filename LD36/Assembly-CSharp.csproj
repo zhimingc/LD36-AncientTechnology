@@ -48,6 +48,7 @@
      <Compile Include="Assets\Scripts\BeamBulletBehavior.cs" />
      <Compile Include="Assets\Scripts\BeamController.cs" />
      <Compile Include="Assets\Scripts\BlockBehavior.cs" />
+     <Compile Include="Assets\Scripts\CometManager.cs" />
      <Compile Include="Assets\Scripts\DayNightController.cs" />
      <Compile Include="Assets\Scripts\ShipController.cs" />
      <Compile Include="Assets\Scripts\WinManager.cs" />
